@@ -203,12 +203,12 @@ footer p{color:#d2d9e3;line-height:1.5;margin:5px 0}
 
 <script>
 const products = [
-  { id: 1, title: "O Despertar da Floresta", author: "Ana Clara Matos", category: "infantil", type: "Livro Físico / Ebook", price: 49.90, desc: "Uma linda aventura lúdica sobre preservação ambiental voltada ao público infanto-juvenil." },
-  { id: 2, title: "Fisioterapia Respiratória Baseada em Evidências", author: "Dr. Carlos Eduardo", category: "saude", type: "Livro Físico", price: 120.00, desc: "Obra de referência clínica avançada para acadêmicos e profissionais especializados." },
-  { id: 3, title: "Metodologias Ativas na Educação em Saúde", author: "Profa. Maria Helena", category: "educacao", type: "Ebook Digital", price: 35.00, desc: "Estratégias modernas para engajamento acadêmico e dinâmicas de sala de aula." },
+  { id: 1, title: "O Despertar da Floresta", author: "Ana Clara Matos", category: "infantil", type: "Livro Físico / Ebook", price: 490.90, desc: "Uma linda aventura lúdica sobre preservação ambiental voltada ao público infanto-juvenil." },
+  { id: 2, title: "Fisioterapia Respiratória Baseada em Evidências", author: "Dr. Carlos Eduardo", category: "saude", type: "Livro Físico", price: 1200.00, desc: "Obra de referência clínica avançada para acadêmicos e profissionais especializados." },
+  { id: 3, title: "Metodologias Ativas na Educação em Saúde", author: "Profa. Maria Helena", category: "educacao", type: "Ebook Digital", price: 350.00, desc: "Estratégias modernas para engajamento acadêmico e dinâmicas de sala de aula." },
   { id: 4, title: "Guia Prático de Postura e Ergonomia", author: "LAMAVEO Acadêmico", category: "saude", type: "Apostila Digital", price: 0.00, desc: "Material educativo gratuito com orientações essenciais de saúde postural para o dia a dia." },
-  { id: 5, title: "Contos e Neblina", author: "Lucas Vinícius", category: "literatura", type: "Livro Físico", price: 42.00, desc: "Coletânea intimista de contos contemporâneos da literatura nacional." },
-  { id: 6, title: "Empreendedorismo na Prática para Profissionais da Saúde", author: "Renata Souza", category: "educacao", type: "Ebook Digital", price: 59.90, desc: "Como estruturar consultórios, clínicas e negócios inovadores no setor de saúde." }
+  { id: 5, title: "Contos e Neblina", author: "Lucas Vinícius", category: "literatura", type: "Livro Físico", price: 420.00, desc: "Coletânea intimista de contos contemporâneos da literatura nacional." },
+  { id: 6, title: "Empreendedorismo na Prática para Profissionais da Saúde", author: "Renata Souza", category: "educacao", type: "Ebook Digital", price: 590.90, desc: "Como estruturar consultórios, clínicas e negócios inovadores no setor de saúde." }
 ];
 
 let cart = [];
