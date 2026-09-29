@@ -88,7 +88,7 @@ footer p{color:#d2d9e3;line-height:1.5;margin:5px 0}
 
 <header>
   <div class="top">
-    <a class="brand" href="#inicio">LAMAVEO</a>
+    <a class="brand" href="#inicio">PÁGINA EM CONTRUÇÃO AGUARDE LANÇAMENTO EM BREVE: LAMAVEO</a>
     <nav aria-label="Navegação principal">
       <a href="#catalogo">Catálogo</a>
       <a href="#como-funciona">Como funciona</a>
