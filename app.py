@@ -1,5 +1,14 @@
 import streamlit as st
 
+# Configuração da Página
+st.set_page_config(
+    page_title="LAMAVEO | Editora e livraria",
+    page_icon="📚",
+    layout="wide"
+)
+
+# Renderizando todo o site HTML/CSS/JavaScript integrado no Streamlit
+st.components.v1.html("""
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -56,7 +65,6 @@ footer{background:#182746;color:white;padding:40px 28px;margin-top:60px}
 footer div{max-width:1184px;margin:auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 footer p{color:#d2d9e3;line-height:1.5;margin:5px 0}
 
-/* Modais e Carrinho */
 .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
 .modal{background:white;padding:30px;border-radius:12px;width:100%;max-width:500px;box-shadow:0 10px 25px rgba(0,0,0,.2);position:relative}
 .modal h3{margin-top:0;font:normal 24px Georgia,serif}
@@ -154,7 +162,6 @@ footer p{color:#d2d9e3;line-height:1.5;margin:5px 0}
   </div>
 </footer>
 
-<!-- Modal do Carrinho / Checkout -->
 <div class="modal-overlay" id="cart-modal">
   <div class="modal">
     <button class="close-modal" id="close-cart">×</button>
@@ -177,7 +184,6 @@ footer p{color:#d2d9e3;line-height:1.5;margin:5px 0}
   </div>
 </div>
 
-<!-- Modal de Login -->
 <div class="modal-overlay" id="account-modal">
   <div class="modal">
     <button class="close-modal" id="close-account">×</button>
@@ -196,7 +202,6 @@ footer p{color:#d2d9e3;line-height:1.5;margin:5px 0}
 </div>
 
 <script>
-// Base de dados inicial dos produtos da Editora LAMAVEO
 const products = [
   { id: 1, title: "O Despertar da Floresta", author: "Ana Clara Matos", category: "infantil", type: "Livro Físico / Ebook", price: 49.90, desc: "Uma linda aventura lúdica sobre preservação ambiental voltada ao público infanto-juvenil." },
   { id: 2, title: "Fisioterapia Respiratória Baseada em Evidências", author: "Dr. Carlos Eduardo", category: "saude", type: "Livro Físico", price: 120.00, desc: "Obra de referência clínica avançada para acadêmicos e profissionais especializados." },
@@ -247,7 +252,6 @@ function renderProducts() {
   `).join('');
 }
 
-// Filtros
 document.querySelectorAll('[data-filter]').forEach(btn => {
   btn.addEventListener('click', (e) => {
     document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
@@ -259,7 +263,6 @@ document.querySelectorAll('[data-filter]').forEach(btn => {
 
 searchInput.addEventListener('input', renderProducts);
 
-// Carrinho de Compras
 function adicionarCarrinho(id) {
   const item = products.find(p => p.id === id);
   cart.push(item);
@@ -303,7 +306,7 @@ function calcularFrete() {
     alert('Digite um CEP válido para o cálculo do frete.');
     return;
   }
-  freteValor = 22.50; // Valor simulado de SEDEX
+  freteValor = 22.50;
   document.getElementById('frete-resultado').innerText = 'SEDEX (Prazo de 3 a 5 dias úteis): R$ 22,50';
   atualizarCarrinhoUI();
 }
@@ -324,7 +327,6 @@ function finalizarCompra() {
   atualizarCarrinhoUI();
 }
 
-// Modais
 document.getElementById('open-cart').addEventListener('click', () => {
   document.getElementById('cart-modal').style.display = 'flex';
 });
@@ -339,9 +341,9 @@ document.getElementById('close-account').addEventListener('click', () => {
   document.getElementById('account-modal').style.display = 'none';
 });
 
-// Inicializar listagem
 renderProducts();
 </script>
 
 </body>
 </html>
+""", height=900, scrolling=True)
