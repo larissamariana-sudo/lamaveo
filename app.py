@@ -7,7 +7,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Renderizando todo o site HTML/CSS/JavaScript integrado no Streamlit
+# Renderizando todo o site HTML/CSS/JavaScript integrado no Streamlit com o Leitor Protegido
 st.components.v1.html("""
 <!doctype html>
 <html lang="pt-BR">
@@ -17,11 +17,13 @@ st.components.v1.html("""
 <title>LAMAVEO | Editora e livraria</title>
 <meta name="description" content="Livros, ebooks e materiais para leitura, ciência e aprendizagem na LAMAVEO.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23182746'/%3E%3Cpath d='M12 15h8v31h26v7H12zM25 15h8v23h13v7H25z' fill='%23f39472'/%3E%3C/svg%3E">
+<!-- Biblioteca PDF.js para renderização segura no navegador -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root{font-family:Inter,Arial,sans-serif;color:#182746;background:#f7f7f5}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}a{color:inherit}
 header{background:#182746;color:white;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.1)}
 .top{max-width:1240px;margin:auto;display:flex;align-items:center;gap:24px;padding:15px 28px}
-.brand{font-family:Georgia,serif;font-weight:bold;font-size:28px;letter-spacing:.12em;text-decoration:none;color:white}
+.brand{font-family:Georgia,serif;font-weight:bold;font-size:20px;letter-spacing:.08em;text-decoration:none;color:white}
 .top nav{display:flex;gap:20px;flex:1}
 .top nav a{text-decoration:none;font-size:15px;color:#d2d9e3;transition:color .2s}
 .top nav a:hover{color:white;text-decoration:underline}
@@ -65,14 +67,21 @@ footer{background:#182746;color:white;padding:40px 28px;margin-top:60px}
 footer div{max-width:1184px;margin:auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 footer p{color:#d2d9e3;line-height:1.5;margin:5px 0}
 
+/* Modais e Leitor Protegido */
 .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
 .modal{background:white;padding:30px;border-radius:12px;width:100%;max-width:500px;box-shadow:0 10px 25px rgba(0,0,0,.2);position:relative}
+.modal.reader-modal{max-width:850px;height:85vh;display:flex;flex-direction:column;}
 .modal h3{margin-top:0;font:normal 24px Georgia,serif}
-.close-modal{position:absolute;top:20px;right:20px;background:none;border:none;font-size:20px;font-weight:bold}
+.close-modal{position:absolute;top:20px;right:20px;background:none;border:none;font-size:20px;font-weight:bold;cursor:pointer}
 .form-group{margin-bottom:16px}
 .form-group label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
 .form-group input, .form-group select{width:100%;padding:10px;border:1px solid #cbd0d6;border-radius:6px}
 .btn-primary{width:100%;background:#182746;color:white;border:none;padding:12px;border-radius:6px;font-weight:bold;margin-top:10px}
+
+/* Container do Leitor PDF */
+#pdf-container{flex:1;overflow-y:auto;background:#e2e8f0;border-radius:6px;display:flex;flex-direction:column;align-items:center;padding:20px;gap:15px;position:relative;}
+.pdf-page-canvas{box-shadow:0 4px 12px rgba(0,0,0,.15);background:white;max-width:100%;}
+.reader-controls{display:flex;justify-content:space-between;align-items:center;margin-top:12px;}
 
 @media(max-width:800px){
 .top{flex-wrap:wrap;gap:12px}
@@ -88,7 +97,7 @@ footer p{color:#d2d9e3;line-height:1.5;margin:5px 0}
 
 <header>
   <div class="top">
-    <a class="brand" href="#inicio">PÁGINA EM CONTRUÇÃO AGUARDE LANÇAMENTO EM BREVE: LAMAVEO</a>
+    <a class="brand" href="#inicio">PÁGINA EM CONSTRUÇÃO: LAMAVEO</a>
     <nav aria-label="Navegação principal">
       <a href="#catalogo">Catálogo</a>
       <a href="#como-funciona">Como funciona</a>
@@ -138,8 +147,8 @@ footer p{color:#d2d9e3;line-height:1.5;margin:5px 0}
 
   <section class="how" id="como-funciona" aria-label="Formatos e entrega">
     <article>
-      <h3>Ebooks e Apostilas</h3>
-      <p>Receba links seguros de acesso imediato por e-mail ou baixe materiais gratuitos diretamente na plataforma.</p>
+      <h3>Leitura Protegida Online</h3>
+      <p>Ebooks e apostilas possuem leitor digital integrado para visualização segura e controlada direto na plataforma.</p>
     </article>
     <article>
       <h3>Livros Físicos</h3>
@@ -155,7 +164,7 @@ footer p{color:#d2d9e3;line-height:1.5;margin:5px 0}
 <footer>
   <div>
     <div>
-      <strong class="brand" style="font-size:20px;">LAMAVEO</strong>
+      <strong class="brand" style="font-size:18px;">LAMAVEO</strong>
       <p>Editora e Livraria Independente.</p>
     </div>
     <p>© 2026 LAMAVEO Editora. Todos os direitos reservados.</p>
@@ -201,19 +210,41 @@ footer p{color:#d2d9e3;line-height:1.5;margin:5px 0}
   </div>
 </div>
 
+<!-- Modal do Leitor Protegido (Client-Side) -->
+<div class="modal-overlay" id="reader-modal">
+  <div class="modal reader-modal">
+    <button class="close-modal" onclick="fecharLeitor()">×</button>
+    <h3 id="reader-title" style="margin-bottom: 10px;">Leitor Digital LAMAVEO</h3>
+    <div id="pdf-container">
+      <p style="text-align:center; padding-top:40px; color:#666;">Carregando obra no leitor seguro...</p>
+    </div>
+    <div class="reader-controls">
+      <span id="page-info" style="font-size: 14px; color: #4a5568; font-weight: 600;">Carregando páginas...</span>
+      <div style="display:flex; gap: 8px;">
+        <button class="buy-btn" onclick="mudarPagina(-1)">Página Anterior</button>
+        <button class="buy-btn" onclick="mudarPagina(1)">Próxima Página</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 const products = [
-  { id: 1, title: "O Despertar da Floresta", author: "Ana Clara Matos", category: "infantil", type: "Livro Físico / Ebook", price: 490.90, desc: "Uma linda aventura lúdica sobre preservação ambiental voltada ao público infanto-juvenil." },
-  { id: 2, title: "Fisioterapia Respiratória Baseada em Evidências", author: "Dr. Carlos Eduardo", category: "saude", type: "Livro Físico", price: 1200.00, desc: "Obra de referência clínica avançada para acadêmicos e profissionais especializados." },
-  { id: 3, title: "Metodologias Ativas na Educação em Saúde", author: "Profa. Maria Helena", category: "educacao", type: "Ebook Digital", price: 350.00, desc: "Estratégias modernas para engajamento acadêmico e dinâmicas de sala de aula." },
-  { id: 4, title: "Guia Prático de Postura e Ergonomia", author: "LAMAVEO Acadêmico", category: "saude", type: "Apostila Digital", price: 0.00, desc: "Material educativo gratuito com orientações essenciais de saúde postural para o dia a dia." },
-  { id: 5, title: "Contos e Neblina", author: "Lucas Vinícius", category: "literatura", type: "Livro Físico", price: 420.00, desc: "Coletânea intimista de contos contemporâneos da literatura nacional." },
-  { id: 6, title: "Empreendedorismo na Prática para Profissionais da Saúde", author: "Renata Souza", category: "educacao", type: "Ebook Digital", price: 590.90, desc: "Como estruturar consultórios, clínicas e negócios inovadores no setor de saúde." }
+  { id: 1, title: "O Despertar da Floresta", author: "Ana Clara Matos", category: "infantil", type: "Livro Físico / Ebook", price: 490.90, desc: "Uma linda aventura lúdica sobre preservação ambiental voltada ao público infanto-juvenil.", pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+  { id: 2, title: "Fisioterapia Respiratória Baseada em Evidências", author: "Dr. Carlos Eduardo", category: "saude", type: "Livro Físico", price: 1200.00, desc: "Obra de referência clínica avançada para acadêmicos e profissionais especializados.", pdfUrl: "" },
+  { id: 3, title: "Metodologias Ativas na Educação em Saúde", author: "Profa. Maria Helena", category: "educacao", type: "Ebook Digital", price: 350.00, desc: "Estratégias modernas para engajamento acadêmico e dinâmicas de sala de aula.", pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+  { id: 4, title: "Guia Prático de Postura e Ergonomia", author: "LAMAVEO Acadêmico", category: "saude", type: "Apostila Digital", price: 0.00, desc: "Material educativo gratuito com orientações essenciais de saúde postural para o dia a dia.", pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" },
+  { id: 5, title: "Contos e Neblina", author: "Lucas Vinícius", category: "literatura", type: "Livro Físico", price: 420.00, desc: "Coletânea intimista de contos contemporâneos da literatura nacional.", pdfUrl: "" },
+  { id: 6, title: "Empreendedorismo na Prática para Profissionais da Saúde", author: "Renata Souza", category: "educacao", type: "Ebook Digital", price: 590.90, desc: "Como estruturar consultórios, clínicas e negócios inovadores no setor de saúde.", pdfUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" }
 ];
 
 let cart = [];
 let currentFilter = 'todos';
 let freteValor = 0;
+
+// Configuração do Leitor PDF.js
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let pdfDoc = null, pageNum = 1;
 
 const grid = document.querySelector('#product-grid');
 const searchInput = document.querySelector('#search');
@@ -243,9 +274,9 @@ function renderProducts() {
       </div>
       <div class="product-footer">
         <span class="price ${p.price === 0 ? 'free' : ''}">${p.price === 0 ? 'Gratuito' : 'R$ ' + p.price.toFixed(2).replace('.', ',')}</span>
-        ${p.price === 0 ? 
-          `<button class="buy-btn free" onclick="baixarGratis('${p.title}')">Baixar PDF</button>` : 
-          `<button class="buy-btn" onclick="adicionarCarrinho(${p.id})">Comprar</button>`
+        ${p.pdfUrl ? 
+          `<button class="buy-btn ${p.price === 0 ? 'free' : ''}" onclick="abrirLeitor('${p.title}', '${p.pdfUrl}')">${p.price === 0 ? 'Ler Gratuitamente' : 'Ler Ebook'}</button>` : 
+          `<button class="buy-btn" onclick="adicionarCarrinho(${p.id})">Comprar Livro</button>`
         }
       </div>
     </article>
@@ -262,6 +293,63 @@ document.querySelectorAll('[data-filter]').forEach(btn => {
 });
 
 searchInput.addEventListener('input', renderProducts);
+
+// Funções do Leitor Protegido de PDF
+function abrirLeitor(titulo, url) {
+  document.getElementById('reader-title').innerText = "Leitor LAMAVEO: " + titulo;
+  document.getElementById('reader-modal').style.display = 'flex';
+  
+  pageNum = 1;
+  document.getElementById('pdf-container').innerHTML = '<p style="text-align:center; padding-top:40px; color:#666;">Carregando documento seguro...</p>';
+
+  pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+    pdfDoc = pdfDoc_;
+    document.getElementById('page-info').textContent = `Total de páginas: ${pdfDoc.numPages}`;
+    renderizarPaginaCompleta();
+  }).catch(error => {
+    document.getElementById('pdf-container').innerHTML = '<p style="text-align:center; color:red; padding-top:40px;">Erro ao carregar o arquivo protegido.</p>';
+  });
+}
+
+function renderizarPaginaCompleta() {
+  const container = document.getElementById('pdf-container');
+  container.innerHTML = ''; 
+
+  pdfDoc.getPage(pageNum).then(function(page) {
+    const scale = 1.2;
+    const viewport = page.getViewport({ scale: scale });
+    
+    const canvas = document.createElement('canvas');
+    canvas.className = 'pdf-page-canvas';
+    const context = canvas.getContext('2d');
+    canvas.height = viewport.height;
+    canvas.width = viewport.width;
+
+    container.appendChild(canvas);
+
+    const renderContext = {
+      canvasContext: context,
+      viewport: viewport
+    };
+    page.render(renderContext);
+    
+    document.getElementById('page-info').textContent = `Página ${pageNum} de ${pdfDoc.numPages}`;
+  });
+}
+
+function mudarPagina(direcao) {
+  if (!pdfDoc) return;
+  let novaPagina = pageNum + direcao;
+  if (novaPagina >= 1 && novaPagina <= pdfDoc.numPages) {
+    pageNum = novaPagina;
+    renderizarPaginaCompleta();
+  }
+}
+
+function fecharLeitor() {
+  document.getElementById('reader-modal').style.display = 'none';
+  pdfDoc = null;
+}
 
 function adicionarCarrinho(id) {
   const item = products.find(p => p.id === id);
@@ -311,10 +399,6 @@ function calcularFrete() {
   atualizarCarrinhoUI();
 }
 
-function baixarGratis(titulo) {
-  alert(`O download gratuito de "${titulo}" foi iniciado com sucesso! O arquivo PDF será salvo em seu dispositivo.`);
-}
-
 function finalizarCompra() {
   if(cart.length === 0) {
     alert('Seu carrinho está vazio.');
@@ -346,4 +430,4 @@ renderProducts();
 
 </body>
 </html>
-""", height=900, scrolling=True)
+""", height=950, scrolling=True)
